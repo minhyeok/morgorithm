@@ -18,8 +18,10 @@ private:
 	string::iterator treeMakingIter;
 	void traverseTreeInner(treeNode * node);
 	void makeTreeRecursion(treeNode * recurNode);
+	void swapVerticalInner(treeNode *node);
 public:
 	Problem(string quizString);
+	void swapVertical();
 	void makeTree();
 	void traverseTree();
 };
@@ -38,6 +40,7 @@ void Problem::makeTreeRecursion(treeNode * recurNode){
 			recurNode->child[i] = new treeNode(*treeMakingIter);
 			treeMakingIter++;
 			makeTreeRecursion(recurNode->child[i]);
+			continue;
 		} else if (*treeMakingIter == 'w' || *treeMakingIter == 'b'){
 			recurNode->child[i] = new treeNode(*treeMakingIter);
 		}
@@ -58,6 +61,30 @@ void Problem::traverseTreeInner(treeNode *tree) {
 			}
 		}
 	}
+}
+
+void Problem::swapVerticalInner(treeNode *tree)
+{
+	treeNode * temp = nullptr;
+	if(tree->colour == 'x'){
+		for (int i = 0; i< 4; i++){
+			if(tree->child[i] != nullptr){
+				swapVerticalInner(tree->child[i]);
+			}
+		}
+		/** swap vertically.*/
+		temp = tree->child[0];
+		tree->child[0] = tree->child[2];
+		tree->child[2] = temp;
+
+		temp = tree->child[1];
+		tree->child[1] = tree->child[3];
+		tree->child[3] = temp;
+	}
+}
+void Problem::swapVertical()
+{
+	swapVerticalInner(this->root);
 }
 
 void Problem::makeTree(){
@@ -113,6 +140,7 @@ int solveProblem(Problem &pm){
 	/**1. make tree with compressed string.*/
 	pm.makeTree();
 	/**2. swap first two nodes with last two nodes.*/
+	pm.swapVertical();
 
 	/**3. print tree with pre-order traverse */
 	cout << "result : "<<endl;
